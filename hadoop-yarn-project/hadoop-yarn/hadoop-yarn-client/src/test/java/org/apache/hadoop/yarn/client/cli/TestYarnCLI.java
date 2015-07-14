@@ -95,9 +95,18 @@ public class TestYarnCLI {
     for (int i = 0; i < 2; ++i) {
       ApplicationCLI cli = createAndGetAppCLI();
       ApplicationId applicationId = ApplicationId.newInstance(1234, 5);
+      
+      // Added by Cheng Zheng
+      Resource neededResource = Resource.newInstance(1024, 8);
+      Resource usedResource = Resource.newInstance(512, 6);
       ApplicationResourceUsageReport usageReport = i == 0 ? null :
           ApplicationResourceUsageReport.newInstance(
-              2, 0, null, null, null, 123456, 4567);
+              2, 0, usedResource, null, neededResource, 123456, 4567);
+      // End
+      
+//      ApplicationResourceUsageReport usageReport = i == 0 ? null :
+//          ApplicationResourceUsageReport.newInstance(
+//              2, 0, null, null, null, 123456, 4567);
       ApplicationReport newApplicationReport = ApplicationReport.newInstance(
           applicationId, ApplicationAttemptId.newInstance(applicationId, 1),
           "user", "queue", "appname", "host", 124, null,
@@ -125,8 +134,20 @@ public class TestYarnCLI {
       pw.println("\tTracking-URL : N/A");
       pw.println("\tRPC Port : 124");
       pw.println("\tAM Host : host");
-      pw.println("\tAggregate Resource Allocation : " +
-          (i == 0 ? "N/A" : "123456 MB-seconds, 4567 vcore-seconds"));
+//      pw.println("\tAggregate Resource Allocation : " +
+//          (i == 0 ? "N/A" : "123456 MB-seconds, 4567 vcore-seconds"));
+      
+      // Added by Cheng Zheng
+      pw.print("\tAggregate Resource Allocation : ");
+      if (i == 0) {
+        pw.println("N/A");
+      } else {
+        pw.println("123456 MB-seconds, 4567 vcore-seconds");
+        pw.print("\tResource Pending : ");
+        pw.println("<memory:512, vCores:2>");
+      }
+      // End      
+      
       pw.println("\tDiagnostics : diagnostics");
       pw.close();
       String appReportStr = baos.toString("UTF-8");
