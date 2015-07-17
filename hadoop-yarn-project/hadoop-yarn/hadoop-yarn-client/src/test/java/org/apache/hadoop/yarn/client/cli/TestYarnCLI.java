@@ -143,7 +143,11 @@ public class TestYarnCLI {
         pw.println("N/A");
       } else {
         pw.println("123456 MB-seconds, 4567 vcore-seconds");
-        pw.print("\tResource Pending : ");
+        pw.print("\tResource Needed : ");
+        pw.println("<memory:1024, vCores:8>");
+        pw.print("\tResource Used : ");
+        pw.println("<memory:512, vCores:6>");
+        pw.print("\tResource in Pending : ");
         pw.println("<memory:512, vCores:2>");
       }
       // End      

@@ -531,9 +531,13 @@ public class ApplicationCLI extends YarnCLI {
         appReportStr.println(usageReport.getVcoreSeconds() + " vcore-seconds");
         
         // Added by Cheng Zheng
-        appReportStr.print("\tResource Pending : ");
+        appReportStr.print("\tResource Needed : ");
         Resource neededResource = usageReport.getNeededResources();
+        appReportStr.println(neededResource.toString());
+        appReportStr.print("\tResource Used : ");
         Resource usedResource = usageReport.getUsedResources();
+        appReportStr.println(usedResource.toString());
+        appReportStr.print("\tResource in Pending : ");
         Resource pendingResource = Resources.subtract(neededResource, usedResource);
         appReportStr.println(pendingResource.toString());
       } else {
