@@ -95,24 +95,17 @@ public class TestYarnCLI {
     for (int i = 0; i < 2; ++i) {
       ApplicationCLI cli = createAndGetAppCLI();
       ApplicationId applicationId = ApplicationId.newInstance(1234, 5);
-      
-      // Added by Cheng Zheng
-      Resource neededResource = Resource.newInstance(1024, 8);
-      Resource usedResource = Resource.newInstance(512, 6);
       ApplicationResourceUsageReport usageReport = i == 0 ? null :
           ApplicationResourceUsageReport.newInstance(
-              2, 0, usedResource, null, neededResource, 123456, 4567);
-      // End
-      
-//      ApplicationResourceUsageReport usageReport = i == 0 ? null :
-//          ApplicationResourceUsageReport.newInstance(
-//              2, 0, null, null, null, 123456, 4567);
+              2, 0, null, null, null, 123456, 4567);
       ApplicationReport newApplicationReport = ApplicationReport.newInstance(
           applicationId, ApplicationAttemptId.newInstance(applicationId, 1),
           "user", "queue", "appname", "host", 124, null,
           YarnApplicationState.FINISHED, "diagnostics", "url", 0, 0,
           FinalApplicationStatus.SUCCEEDED, usageReport, "N/A", 0.53789f, "YARN",
           null);
+      Resource pendingResources = Resource.newInstance(256, 3);
+      newApplicationReport.setPendingResources(pendingResources);
       when(client.getApplicationReport(any(ApplicationId.class))).thenReturn(
           newApplicationReport);
       int result = cli.run(new String[] { "application", "-status", applicationId.toString() });
@@ -134,24 +127,9 @@ public class TestYarnCLI {
       pw.println("\tTracking-URL : N/A");
       pw.println("\tRPC Port : 124");
       pw.println("\tAM Host : host");
-//      pw.println("\tAggregate Resource Allocation : " +
-//          (i == 0 ? "N/A" : "123456 MB-seconds, 4567 vcore-seconds"));
-      
-      // Added by Cheng Zheng
-      pw.print("\tAggregate Resource Allocation : ");
-      if (i == 0) {
-        pw.println("N/A");
-      } else {
-        pw.println("123456 MB-seconds, 4567 vcore-seconds");
-        pw.print("\tResource Needed : ");
-        pw.println("<memory:1024, vCores:8>");
-        pw.print("\tResource Used : ");
-        pw.println("<memory:512, vCores:6>");
-        pw.print("\tResource in Pending : ");
-        pw.println("<memory:512, vCores:2>");
-      }
-      // End      
-      
+      pw.println("\tTotal Pending Resources : <memory:256, vCores:3>");
+      pw.println("\tAggregate Resource Allocation : " +
+          (i == 0 ? "N/A" : "123456 MB-seconds, 4567 vcore-seconds"));
       pw.println("\tDiagnostics : diagnostics");
       pw.close();
       String appReportStr = baos.toString("UTF-8");

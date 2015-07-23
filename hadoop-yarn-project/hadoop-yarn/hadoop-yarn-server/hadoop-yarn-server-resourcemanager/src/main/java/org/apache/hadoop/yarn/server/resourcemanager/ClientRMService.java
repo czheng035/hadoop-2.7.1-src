@@ -339,13 +339,17 @@ public class ClientRMService extends AbstractService implements
             allowAccess);
     
     // Added by Cheng Zheng
-    // Add pending requests to application reports    
-    List<ResourceRequest> resourceRequests =
-        ((AbstractYarnScheduler) rmContext.getScheduler())
-          .getPendingResourceRequestsForAttempt(
-              application.getCurrentAppAttempt().getAppAttemptId());
-    Resource pendingRequests = getTotalResource(resourceRequests);
-    report.setPendingRequests(pendingRequests);
+    // Add pending requests to application reports
+    RMAppAttempt currentAttempt = application.getCurrentAppAttempt();
+    if (currentAttempt == null) {
+      report.setPendingResources(Resource.newInstance(0, 0));
+    } else {
+      List<ResourceRequest> pendingResourceRequests =
+          ((AbstractYarnScheduler) rmContext.getScheduler())
+            .getPendingResourceRequestsForAttempt(currentAttempt.getAppAttemptId());
+      Resource pendingResources = getTotalResource(pendingResourceRequests);
+      report.setPendingResources(pendingResources);
+    }
     // End
 
     GetApplicationReportResponse response = recordFactory

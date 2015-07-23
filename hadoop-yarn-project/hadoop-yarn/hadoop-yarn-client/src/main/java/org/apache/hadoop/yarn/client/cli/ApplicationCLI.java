@@ -521,25 +521,16 @@ public class ApplicationCLI extends YarnCLI {
       appReportStr.println(appReport.getRpcPort());
       appReportStr.print("\tAM Host : ");
       appReportStr.println(appReport.getHost());
+      appReportStr.print("\tTotal Pending Resources : ");
+      Resource pendingResource = appReport.getPendingResources();
+      appReportStr.println(pendingResource.toString());
       appReportStr.print("\tAggregate Resource Allocation : ");
-
       ApplicationResourceUsageReport usageReport =
           appReport.getApplicationResourceUsageReport();
       if (usageReport != null) {
         //completed app report in the timeline server doesn't have usage report
         appReportStr.print(usageReport.getMemorySeconds() + " MB-seconds, ");
         appReportStr.println(usageReport.getVcoreSeconds() + " vcore-seconds");
-        
-        // Added by Cheng Zheng
-        appReportStr.print("\tResource Needed : ");
-        Resource neededResource = usageReport.getNeededResources();
-        appReportStr.println(neededResource.toString());
-        appReportStr.print("\tResource Used : ");
-        Resource usedResource = usageReport.getUsedResources();
-        appReportStr.println(usedResource.toString());
-        appReportStr.print("\tResource in Pending : ");
-        Resource pendingResource = Resources.subtract(neededResource, usedResource);
-        appReportStr.println(pendingResource.toString());
       } else {
         appReportStr.println("N/A");
       }

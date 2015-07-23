@@ -362,6 +362,6 @@ public abstract class ApplicationReport {
   @Stable
   public abstract Token getAMRMToken();
   
-  public abstract Resource getPendingRequests();
-  public abstract void setPendingRequests(Resource pendingRequests);  
+  public abstract Resource getPendingResources();
+  public abstract void setPendingResources(Resource pendingResources);  
 }

@@ -195,7 +195,7 @@ message ApplicationReportProto {
   optional hadoop.common.TokenProto am_rm_token = 19;
   repeated string applicationTags = 20;
   
-  optional ResourceProto pending_requests = 21;
+  optional ResourceProto pendingResources = 21;
 }
 
 message ApplicationAttemptReportProto {
